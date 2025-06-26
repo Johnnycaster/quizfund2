@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TecnoQuiz: Educação Tecnológica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0000FF; /* Fundo azul vibrante para efeito neon */
+            color: #ffffff; /* Texto claro para contraste */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Mantém o fundo fixo ao rolar */
+            overflow-x: hidden; /* Evita rolagem horizontal */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        #main-header {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 0 0 1rem 1rem;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        #main-header h1 {
+            color: #00FFFF;
+            font-size: 3rem;
+            font-weight: 800;
+            text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF, 0 0 30px #00FFFF;
+        }
+        #main-header h1:hover {
+            text-shadow: 0 0 15px #00FFFF, 0 0 25px #00FFFF, 0 0 40px #00FFFF, 0 0 50px #00FFFF;
+        }
+
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+
+        .topic-card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #222222;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            min-height: 120px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .topic-card-wrapper:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px #e50914, 0 0 30px #e50914, 0 0 40px #e50914;
+        }
+
+        .topic-main-button {
+            background-color: transparent;
+            border: none;
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            width: 100%;
+            padding: 0;
+        }
+
+        .selection-button-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 0.75rem;
+            filter: drop-shadow(0 0 8px #00FFFF);
+        }
+
+        .btn-quiz-card {
+            background-color: #00FFFF; /* Fundo ciano */
+            color: #000000; /* Texto preto */
+            padding: 0.7rem 1.2rem; /* Mais padding */
+            border-radius: 0.6rem; /* Mais arredondado */
+            font-weight: 700; /* Mais negrito */
+            font-size: 1rem; /* Um pouco maior */
+            margin-top: 1rem; /* Mais espaço do botão principal */
+            box-shadow: 0 0 8px #00FFFF, 0 0 15px #00FFFF; /* Brilho mais forte */
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            width: auto;
+            align-self: center;
+            cursor: pointer; /* Garante que o cursor de mão apareça */
+        }
+        .btn-quiz-card:hover {
+            transform: translateY(-3px) scale(1.05); /* Mais movimento no hover */
+            background-color: #33FFFF; /* Ciano mais claro no hover */
+            box-shadow: 0 0 15px #00FFFF, 0 0 25px #00FFFF, 0 0 35px #00FFFF; /* Brilho ainda mais forte */
+        }
+        .quiz-indicator-text {
+            font-size: 0.85rem;
+            color: #00FFFF;
+            margin-left: 0.5rem;
+            font-weight: 600;
+            text-shadow: 0 0 5px #00FFFF;
+        }
+
+
+        .content-section {
+            background-color: rgba(0, 0, 0, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+            padding: 3rem;
+            margin: 2rem auto;
+            max-width: 900px;
+            animation: fadeIn 0.5s ease-out;
+            color: #e5e5e5;
+            min-height: 550px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section-title {
+            color: #e50914;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(229, 9, 20, 0.5);
+            padding-bottom: 0.75rem;
+            font-weight: 700;
+        }
+        .content-paragraph, .content-list li {
+            line-height: 1.75;
+            margin-bottom: 1rem;
+            color: #cccccc;
+        }
+        .content-list {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-option {
+            background-color: #333333;
+            border: 1px solid #555555;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            color: #e5e5e5;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .quiz-option:hover {
+            background-color: #444444;
+            transform: scale(1.01);
+        }
+        .quiz-option.correct {
+            background-color: #0f8040;
+            border-color: #0f8040;
+            color: #ffffff;
+        }
+        .quiz-option.incorrect {
+            background-color: #b20710;
+            border-color: #b20710;
+            color: #ffffff;
+        }
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            background-color: #333333;
+            color: #e5e5e5;
+            border: 1px solid #555555;
+        }
+        .quiz-feedback.success {
+            background-color: #0f8040;
+            color: #ffffff;
+        }
+        .quiz-feedback.error {
+            background-color: #b20710;
+            color: #ffffff;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .btn-primary {
+            background-color: #e50914;
+            color: #ffffff;
+            box-shadow: 0 0 5px rgba(229, 9, 20, 0.5);
+        }
+        .btn-primary:hover {
+            background-color: #f40612;
+            box-shadow: 0 0 15px #e50914, 0 0 25px #e50914, 0 0 35px #e50914;
+        }
+        .btn-secondary {
+            background-color: #555555;
+            color: #ffffff;
+            box-shadow: 0 0 5px rgba(85, 85, 85, 0.5);
+        }
+        .btn-secondary:hover {
+            background-color: #666666;
+            box-shadow: 0 0 15px #555555, 0 0 25px #555555, 0 0 35px #555555;
+        }
+
+        .hidden-container {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center">
+
+    <header id="main-header" class="w-full flex items-center justify-between">
+        <div class="container mx-auto flex items-center justify-between px-4 py-2">
+            <h1 class="cursor-pointer" onclick="showYearSelection()">TecnoQuiz</h1>
+            <span id="current-user-info" class="text-white text-lg font-semibold hidden"></span>
+        </div>
+    </header>
+
+    <main id="year-selection-screen" class="flex-grow w-full py-8">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-bold mb-6 px-4 text-center">Selecione o seu Ano</h2>
+            <div id="year-buttons-list" class="selection-grid">
+            </div>
+        </div>
+    </main>
+
+    <main id="topic-screen" class="flex-grow w-full py-8 hidden-container">
+        <div class="container mx-auto">
+            <h2 id="topic-screen-title" class="text-3xl font-bold mb-6 px-4 text-center"></h2>
+            <div id="topic-buttons-list" class="selection-grid">
+            </div>
+            <div class="flex justify-center mt-8">
+                <button onclick="showYearSelection()" class="btn-secondary">Voltar à Seleção de Ano</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="content-display" class="flex-grow w-full hidden-container">
+        <div id="topic-text-section" class="content-section">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mt-6">
+                <button onclick="goBackToTopics()" class="btn-secondary">Voltar ao Menu Principal</button>
+                <div id="quiz-button-container" style="display: flex; justify-content: center; align-items: center; width: auto;">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section id="quiz-display" class="flex-grow w-full hidden-container">
+        <div class="content-section">
+            <h2 class="text-3xl font-bold section-title">Quiz sobre o Tópico</h2>
+            <div id="quiz-questions"></div>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4 mt-6">
+                <button onclick="submitQuiz()" class="btn-primary">Enviar Respostas</button>
+                <div id="quiz-results" class="quiz-feedback hidden-container"></div>
+                <button onclick="goBackToTopics()" class="btn-secondary">Sair do Quiz</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="w-full bg-black text-white p-6 mt-8 text-center rounded-t-xl">
+        <p class="text-sm">&copy; 2025 TecnoQuiz. Todos os direitos reservados.</p>
+        <p class="text-xs mt-2">Feito com entusiasmo para o aprendizado do 6º ao 9º ano.</p>
+    </footer>
+
+    <script>
+        const contentData = {
+            '6ano': {
+                title: '6º Ano: Fundamentos da Tecnologia',
+                topics: {
+                    'o-que-e-tecnologia-6': {
+                        title: 'O Que É Tecnologia?',
+                        description: 'Descubra como a tecnologia simples está ao seu redor.',
+                        image: 'https://placehold.co/48x48/00FFFF/000000?text=T6',
+                        text: `
+                            <h2 class="text-3xl font-bold section-title">1. O Que É Tecnologia? (6º Ano)</h2>
+                            <p class="content-paragraph">
+                                A tecnologia, em sua essência, refere-se a todo e qualquer instrumento, técnica, ou método desenvolvido pelo ser humano para facilitar a vida, resolver problemas, e estender as capacidades naturais. Desde as ferramentas de pedra lascada utilizadas pelos nossos ancestrais até os complexos sistemas de inteligência artificial de hoje, a tecnologia é uma manifestação da engenhosidade humana. Ela não se limita apenas a computadores e smartphones; um simples lápis, uma roda, ou um livro são, em seu contexto histórico, exemplos de tecnologias revolucionárias.
+                            </p>
+                            <p class="content-paragraph">
+                                Ao longo da história, a evolução tecnológica tem sido um motor fundamental para o progresso das civilizações. A invenção da escrita, da imprensa, da máquina a vapor e da eletricidade, por exemplo, não apenas transformou a maneira como vivemos e trabalhamos, mas também moldou as sociedades, as economias e as culturas. Compreender a tecnologia sob essa ótica ampla nos permite reconhecer sua onipresença e seu impacto contínuo em todas as esferas da existência humana, desde as tarefas mais banais até as grandes conquistas científicas.
+                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Exemplos cotidianos de tecnologia:</h3>
+                            <ul class="content-list">
+                                <li><strong>Geladeira:</strong> Um eletrodoméstico que utiliza princípios de refrigeração para conservar alimentos, reduzindo o desperdício e melhorando a segurança alimentar.</li>
+                                <li><strong>Bicicleta:</strong> Uma máquina simples que utiliza o princípio da alavanca e da roda para facilitar o transporte, combinando engenharia mecânica e física.</li>
+                                <li><strong>Óculos:</strong> Uma tecnologia óptica que corrige problemas de visão, permitindo que indivíduos vejam com clareza, impactando diretamente a educação e o trabalho.</li>
+                                <li><strong>Relógio:</strong> Um dispositivo que mede e indica a passagem do tempo, fundamental para a organização social, o agendamento e a coordenação de atividades humanas.</li>
+                                <li><strong>Sistemas de Navegação (GPS):</strong> Uma tecnologia que utiliza satélites para determinar a localização geográfica e auxiliar na orientação, revolucionando a forma como viajamos e exploramos.</li>
+                            </ul>
+                            <p class="content-paragraph">
+                                A tecnologia é, portanto, muito mais do que apenas dispositivos eletrônicos. É a aplicação prática do conhecimento para atingir objetivos, melhorar a qualidade de vida e superar desafios.
+                            </p>
+                        `,
+                        quiz: [
+                            {
+                                question: "Qual das seguintes afirmações melhor define 'tecnologia' em seu sentido mais abrangente?",
+                                options: [
+                                    "Exclusivamente invenções eletrônicas e digitais.",
+                                    "Qualquer instrumento ou método desenvolvido para facilitar a vida humana e resolver problemas.",
+                                    "Ferramentas complexas que utilizam inteligência artificial.",
+                                    "Apenas máquinas industriais e equipamentos de alta complexidade."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Considerando a evolução histórica, qual dos itens abaixo é um exemplo de tecnologia primitiva que revolucionou a vida humana?",
+                                options: [
+                                    "O primeiro computador ENIAC.",
+                                    "A roda.",
+                                    "O telefone celular.",
+                                    "A inteligência artificial."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Qual o principal propósito da invenção e do uso de tecnologias pelo ser humano?",
+                                options: [
+                                    "Aumentar a complexidade das tarefas diárias.",
+                                    "Gerar mais trabalho e esforço físico.",
+                                    "Simplificar processos, resolver problemas e aprimorar as capacidades humanas.",
+                                    "Criar dependência de máquinas e dispositivos."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "Um relógio é considerado uma tecnologia por qual motivo?",
+                                options: [
+                                    "Porque é feito de metal.",
+                                    "Porque usa eletricidade.",
+                                    "Porque foi inventado recentemente.",
+                                    "Porque mede e organiza a passagem do tempo, facilitando a coordenação de atividades."
+                                ],
+                                correct: 3
+                            },
+                            {
+                                question: "Como a tecnologia tem influenciado o progresso das civilizações?",
+                                options: [
+                                    "Exclusivamente através da criação de dispositivos de entretenimento.",
+                                    "Limitando a comunicação entre as pessoas.",
+                                    "Atuando como um motor fundamental que transforma a forma como vivemos, trabalhamos e nos relacionamos.",
+                                    "Apenas causando a poluição do meio ambiente."
+                                ],
+                                correct: 2
+                            }
+                        ]
+                    },
+                    'tecnologia-dia-a-dia-6': {
+                        title: 'Tecnologia no Dia a Dia',
+                        description: 'Como a tecnologia nos ajuda diariamente em casa e na escola.',
+                        image: 'https://placehold.co/48x48/00FFFF/000000?text=D6',
+                        text: `
+                            <h2 class="text-3xl font-bold section-title">2. Tecnologia no Dia a Dia (6º Ano)</h2>
+                            <p class="content-paragraph">
+                                A tecnologia permeia quase todos os aspetos do nosso quotidiano, desde o momento em que acordamos até a hora de dormir. Ela está presente nas ferramentas que usamos para nos comunicar, aprender, divertir e até mesmo para cuidar da nossa saúde. No ambiente doméstico, eletrodomésticos inteligentes e sistemas de automação simplificam tarefas e otimizam o consumo de energia, transformando nossas casas em espaços mais eficientes e conectados.
+                            </p>
+                            <p class="content-paragraph">
+                                Na escola, a tecnologia revolucionou a forma como interagimos com o conhecimento. Laptops, tablets, quadros interativos e acesso à internet são ferramentas que enriquecem o processo de ensino-aprendizagem, permitindo pesquisas rápidas, aulas dinâmicas e o desenvolvimento de habilidades digitais essenciais. Além disso, aplicativos educativos e plataformas online oferecem recursos personalizados, adaptando-se ao ritmo de cada estudante e ampliando as possibilidades de aprendizado fora da sala de aula. A tecnologia, portanto, não é apenas um luxo, mas um componente vital para a vida moderna e para a construção do conhecimento.
+                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Exemplos práticos de tecnologia no cotidiano:</h3>
+                            <ul class="content-list">
+                                <li><strong>Automação Residencial:</strong> Sistemas que permitem controlar iluminação, temperatura e segurança da casa remotamente, via smartphone, otimizando o conforto e a segurança.</li>
+                                <li><strong>Transporte Inteligente:</strong> Aplicativos de navegação que utilizam GPS e dados de tráfego em tempo real para otimizar rotas, reduzir congestionamentos e economizar tempo.</li>
+                                <li><strong>Saúde Digital:</strong> Dispositivos vestíveis (wearables) que monitoram batimentos cardíacos, passos e qualidade do sono, incentivando hábitos saudáveis e fornecendo dados importantes para acompanhamento médico.</li>
+                                <li><strong>Comunicação Instantânea:</strong> Aplicativos de mensagens e videochamadas que conectam pessoas em diferentes partes do mundo, facilitando a interação pessoal e profissional.</li>
+                                <li><strong>Plataformas de Aprendizado Online:</strong> Ambientes virtuais que oferecem cursos, materiais de estudo e interação com professores e colegas, democratizando o acesso à educação de qualidade.</li>
+                            </ul>
+                            <p class="content-paragraph">
+                                A integração da tecnologia no nosso dia a dia redefine a eficiência, a conveniência e a forma como nos relacionamos com o mundo ao nosso redor.
+                            </p>
+                        `,
+                        quiz: [
+                            {
+                                question: "Qual a principal vantagem dos sistemas de automação residencial, como o controle de iluminação via smartphone?",
+                                options: [
+                                    "Aumentar o consumo de energia.",
+                                    "Limitar o acesso a informações importantes.",
+                                    "Otimizar o conforto, a segurança e a eficiência energética da casa.",
+                                    "Causar dependência excessiva de dispositivos eletrônicos."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "De que forma os aplicativos de navegação contribuem para a otimização do transporte?",
+                                options: [
+                                    "Apenas mostrando mapas estáticos.",
+                                    "Aumentando o tempo de viagem.",
+                                    "Utilizando dados de tráfego em tempo real para sugerir as melhores rotas.",
+                                    "Restringindo o número de veículos nas estradas."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "Qual o papel dos dispositivos vestíveis (wearables) na saúde digital?",
+                                options: [
+                                    "Serem apenas acessórios de moda.",
+                                    "Monitorar dados de saúde como batimentos cardíacos e passos para incentivar hábitos saudáveis.",
+                                    "Substituir completamente a necessidade de consultas médicas.",
+                                    "Gerar ruídos e distrações constantes."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Como as plataformas de aprendizado online impactam o acesso à educação?",
+                                options: [
+                                    "Restringindo o conhecimento a um grupo seleto de alunos.",
+                                    "Apenas para cursos de programação avançada.",
+                                    "Democratizando o acesso a vastos conhecimentos e recursos educativos de qualidade.",
+                                    "Tornando o ensino presencial obsoleto."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "A tecnologia no dia a dia, como aplicativos de mensagens, facilita principalmente qual aspecto da vida moderna?",
+                                options: [
+                                    "Aumento do isolamento social.",
+                                    "Complicação das tarefas simples.",
+                                    "A comunicação instantânea e a conexão com pessoas globalmente.",
+                                    "A dependência de manuais impressos para cada dispositivo."
+                                ],
+                                correct: 2
+                            }
+                        ]
+                    },
+                    'internet-segura-6': {
+                        title: 'Internet Segura: Regras Básicas',
+                        description: 'Dicas simples para se manter seguro ao navegar na internet.',
+                        image: 'https://placehold.co/48x48/00FFFF/000000?text=S6',
+                        text: `
+                            <h2 class="text-3xl font-bold section-title">3. Internet Segura: Regras Básicas (6º Ano)</h2>
+                            <p class="content-paragraph">
+                                Navegar na internet é uma experiência enriquecedora e divertida, repleta de oportunidades para aprendizado, comunicação e entretenimento. No entanto, é fundamental estar ciente dos riscos e adotar comportamentos seguros para proteger sua privacidade e segurança online. A internet é um espaço público e, assim como no mundo físico, exige cautela e discernimento ao interagir com outras pessoas e ao compartilhar informações.
+                            </p>
+                            <p class="content-paragraph">
+                                A segurança online começa com a consciência de sua "pegada digital" – o rastro de informações que você deixa na internet. Cada clique, postagem ou interação contribui para essa pegada, e é crucial que ela reflita uma imagem positiva e segura. Além disso, a capacidade de pensar criticamente sobre o que se vê e se lê online é uma habilidade vital para identificar informações falsas (fake news) e tentativas de golpes, que são cada vez mais sofisticadas. Adotar essas práticas não só te protege, mas também contribui para um ambiente digital mais seguro e confiável para todos.
+                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Práticas essenciais para uma navegação segura:</h3>
+                            <ul class="content-list">
+                                <li><strong>Proteção de Dados Pessoais:</strong> Evite compartilhar informações sensíveis como endereço residencial, número de telefone, nome completo de parentes ou detalhes da rotina escolar com estranhos online. Lembre-se de que nem todas as pessoas são quem dizem ser.</li>
+                                <li><strong>Senhas Fortes e Gerenciamento:</strong> Crie senhas complexas, combinando letras maiúsculas e minúsculas, números e símbolos. Use senhas diferentes para cada conta e considere o uso de um gerenciador de senhas para maior segurança.</li>
+                                <li><strong>Desconfie de Links e Anexos Suspeitos:</strong> Phishing é uma técnica comum de golpe. Não clique em links ou abra anexos de e-mails, mensagens ou redes sociais de remetentes desconhecidos ou que pareçam suspeitos, mesmo que a oferta seja muito tentadora.</li>
+                                <li><strong>Privacidade em Redes Sociais:</strong> Configure as opções de privacidade de seus perfis para que apenas amigos e familiares próximos tenham acesso ao seu conteúdo. Seja seletivo ao aceitar novas amizades e revise regularmente suas configurações.</li>
+                                <li><strong>Denuncie Comportamentos Inapropriados:</strong> Se você presenciar cyberbullying, assédio ou qualquer conteúdo que te deixe desconfortável, não hesite em denunciar à plataforma e informar um adulto de confiança. Sua ação pode proteger você e outras pessoas.</li>
+                            </ul>
+                            <p class="content-paragraph">
+                                A internet é uma ferramenta poderosa; usá-la com responsabilidade e conhecimento é a chave para aproveitar seus benefícios de forma segura.
+                            </p>
+                        `,
+                        quiz: [
+                            {
+                                question: "Qual o conceito de 'pegada digital' e sua importância para a segurança online?",
+                                options: [
+                                    "Apenas a quantidade de dados que um celular armazena.",
+                                    "O rastro de informações e interações que você deixa na internet, sendo crucial para sua reputação e segurança.",
+                                    "O número de amigos que você tem em redes sociais.",
+                                    "A forma como os dados são transmitidos via Wi-Fi."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Por que é fundamental criar senhas complexas e únicas para cada serviço online?",
+                                options: [
+                                    "Para facilitar o acesso a todas as suas contas de uma vez.",
+                                    "Porque senhas simples são mais fáceis de lembrar.",
+                                    "Para aumentar a segurança de suas contas, dificultando ataques de hackers que tentam roubar dados.",
+                                    "Apenas para seguir uma recomendação de segurança sem motivo prático."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "O que é 'phishing' e como se proteger contra ele?",
+                                options: [
+                                    "Um tipo de jogo online muito popular.",
+                                    "Uma técnica de fraude que tenta enganar usuários para obter informações confidenciais; proteja-se desconfiando de links e anexos suspeitos.",
+                                    "Um programa que acelera a internet.",
+                                    "Uma ferramenta para criar novos perfis em redes sociais."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Qual a melhor prática para configurar a privacidade em suas redes sociais?",
+                                options: [
+                                    "Deixar o perfil público para todos verem e interagirem.",
+                                    "Aceitar todas as solicitações de amizade para ter mais seguidores.",
+                                    "Configurar o perfil como privado, permitindo acesso apenas a amigos e familiares conhecidos na vida real.",
+                                    "Compartilhar todos os detalhes da sua rotina diária sem restrições."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "Ao presenciar cyberbullying ou conteúdo inapropriado, qual a atitude mais responsável a ser tomada?",
+                                options: [
+                                    "Ignorar e não se envolver, pois não é problema seu.",
+                                    "Participar da brincadeira para não ficar de fora.",
+                                    "Denunciar à plataforma, bloquear o agressor e informar um adulto de confiança.",
+                                    "Tentar resolver a situação sozinho, confrontando o agressor."
+                                ],
+                                correct: 2
+                            }
+                        ]
+                    }
+                }
+            },
+            '7ano': {
+                title: '7º Ano: Explorando o Mundo Digital',
+                topics: {
+                    'evolucao-comunicacao-7': {
+                        title: 'A Evolução da Comunicação',
+                        description: 'Como nos comunicamos de cartas a videochamadas.',
+                        image: 'https://placehold.co/48x48/00FFFF/000000?text=C7',
+                        text: `
+                            <h2 class="text-3xl font-bold section-title">1. A Evolução da Comunicação (7º Ano)</h2>
+                            <p class="content-paragraph">
+                                A história da humanidade é intrinsecamente ligada à evolução de suas formas de comunicação. Desde os primórdios, o desejo de transmitir informações e ideias impulsionou a criação de métodos cada vez mais eficazes e abrangentes. Inicialmente, a comunicação era baseada em sinais visuais e sonoros rudimentares, como fogueiras e tambores. Com o tempo, o desenvolvimento da linguagem oral, e posteriormente da escrita, representou um salto qualitativo, permitindo o registro e a transmissão de conhecimento através das gerações.
+                            </p>
+                            <p class="content-paragraph">
+                                A Revolução Industrial no século XIX trouxe avanços significativos, como o telégrafo e o telefone, que permitiram a comunicação quase instantânea a longas distâncias, transformando o comércio, a política e as relações pessoais. O século XX presenciou a massificação da informação com o rádio e a televisão, levando notícias e entretenimento a milhões de lares simultaneamente. Contudo, foi com o advento da internet, no final do século XX, que a comunicação alcançou uma dimensão global e interativa sem precedentes, culminando nas redes sociais e videochamadas que dominam o cenário atual, encurtando distâncias e redefinindo o conceito de interação social.
+                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Marcos e seus impactos na comunicação:</h3>
+                            <ul class="content-list">
+                                <li><strong>Escrita (aproximadamente 3500 a.C.):</strong> A invenção da escrita possibilitou o registro permanente de informações, leis, histórias e conhecimentos, fundamentando o desenvolvimento da civilização e a transmissão cultural.</li>
+                                <li><strong>Imprensa de Gutenberg (Século XV):</strong> Revolucionou a disseminação do conhecimento ao permitir a produção em massa de livros, tornando a leitura mais acessível e impulsionando a alfabetização e a Reforma Protestante.</li>
+                                <li><strong>Telégrafo (Década de 1830):</strong> O primeiro meio de comunicação elétrico, utilizando o Código Morse, que encurtou drasticamente o tempo de envio de mensagens a longas distâncias, impactando o comércio e a guerra.</li>
+                                <li><strong>Telefone (1876):</strong> A invenção de Alexander Graham Bell permitiu a comunicação de voz em tempo real entre indivíduos distantes, revolucionando as relações pessoais e comerciais.</li>
+                                <li><strong>Rádio (Final do Século XIX, popularizado no Século XX):</strong> Trouxe a notícia e o entretenimento para as massas de forma instantânea, superando barreiras geográficas e unificando culturas.</li>
+                                <li><strong>Televisão (Década de 1920, popularizada pós-1940):</strong> Combinou som e imagem, exercendo um poder imenso na formação de opinião pública e na disseminação cultural global.</li>
+                                <li><strong>Internet (Década de 1980, popularizada nos Anos 90):</strong> Conectou o mundo em rede, permitindo a troca de informações em larga escala, o surgimento de novas mídias e a globalização.</li>
+                            </ul>
+                            <p class="content-paragraph">
+                                A comunicação é um campo em constante inovação, e as tecnologias digitais continuam a abrir novas fronteiras para a interação humana.
+                            </p>
+                        `,
+                        quiz: [
+                            {
+                                question: "Qual foi o impacto mais significativo da invenção da imprensa de Gutenberg na comunicação e na sociedade?",
+                                options: [
+                                    "Aumento do custo dos livros.",
+                                    "Restrição da leitura a poucas pessoas.",
+                                    "Democratização do conhecimento pela produção em massa de livros e o impulsionamento da alfabetização.",
+                                    "Aumento da distância entre as pessoas."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "Como o telégrafo, inventado no século XIX, alterou a dinâmica da comunicação?",
+                                options: [
+                                    "Permitiu a comunicação de voz em tempo real.",
+                                    "Apenas serviu para enviar mensagens em código para navios.",
+                                    "Reduziu drasticamente o tempo de envio de mensagens a longas distâncias, impactando o comércio e a guerra.",
+                                    "Facilitou a comunicação visual através de imagens."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "A transição da comunicação escrita (cartas) para o telefone representou uma revolução por qual motivo principal?",
+                                options: [
+                                    "Permitiu apenas a comunicação formal.",
+                                    "Tornou a comunicação mais lenta.",
+                                    "Permitiu a comunicação de voz em tempo real, superando barreiras geográficas e temporais.",
+                                    "Limitou o número de pessoas que podiam se comunicar."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "Qual o papel da internet na comunicação global a partir do final do século XX?",
+                                options: [
+                                    "Diminuir a troca de informações.",
+                                    "Conectar o mundo em rede, possibilitando a troca de informações em larga escala, novas mídias e a globalização.",
+                                    "Restringir o acesso ao conhecimento a poucos.",
+                                    "Promover apenas a comunicação local."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Antes da invenção do telégrafo, qual era uma das principais limitações das formas de comunicação a longa distância?",
+                                options: [
+                                    "A falta de pessoas para entregar as mensagens.",
+                                    "A velocidade e o custo da transmissão, que eram muito elevados.",
+                                    "A dificuldade de entender os sinais de fumaça.",
+                                    "A inexistência de mensagens escritas."
+                                ],
+                                correct: 1
+                            }
+                        ]
+                    },
+                    'hardware-software-7': {
+                        title: 'Hardware e Software',
+                        description: 'Entenda o que são as partes físicas e os programas de um computador.',
+                        image: 'https://placehold.co/48x48/00FFFF/000000?text=HS7',
+                        text: `
+                            <h2 class="text-3xl font-bold section-title">2. Hardware e Software (7º Ano)</h2>
+                            <p class="content-paragraph">
+                                Para que um sistema computacional funcione, é essencial que duas componentes interajam de forma harmoniosa: o <strong>Hardware</strong> e o <strong>Software</strong>. O Hardware constitui a parte física, tangível, de um computador ou dispositivo eletrônico. Ele engloba todos os componentes eletrônicos, elétricos e mecânicos que podem ser tocados e vistos, formando a estrutura sobre a qual o sistema opera. Sem o hardware, não haveria onde processar as informações ou executar as instruções.
+                            </p>
+                            <p class="content-paragraph">
+                                Por outro lado, o Software é a parte lógica, intangível, responsável por dar vida ao hardware. Consiste em conjuntos de instruções, programas, dados e protocolos que dizem ao hardware o que fazer. É o software que permite ao usuário interagir com o computador, executar tarefas específicas e aproveitar as funcionalidades do sistema. A distinção entre hardware e software é fundamental para entender como os dispositivos eletrônicos operam e como são desenvolvidos, pois um é inútil sem o outro.
+                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Categorias e exemplos de Hardware:</h3>
+                            <ul class="content-list">
+                                <li><strong>Dispositivos de Entrada:</strong> Componentes que permitem a inserção de dados no computador. Exemplos incluem teclado, mouse, microfone, webcam e scanner.</li>
+                                <li><strong>Dispositivos de Saída:</strong> Componentes que exibem ou produzem informações processadas pelo computador. Exemplos são monitor, impressora, alto-falantes e projetor.</li>
+                                <li><strong>Unidade Central de Processamento (CPU):</strong> Considerado o "cérebro" do computador, responsável por executar as instruções dos programas e processar os dados.</li>
+                                <li><strong>Memória RAM (Random Access Memory):</strong> Memória de curto prazo utilizada para armazenar dados e programas em execução, permitindo acesso rápido para a CPU.</li>
+                                <li><strong>Dispositivos de Armazenamento:</strong> Componentes para guardar dados de forma permanente ou semi-permanente. Exemplos: Disco Rígido (HD), Solid State Drive (SSD), pendrives e cartões de memória.</li>
+                            </ul>
+                            <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Categorias e exemplos de Software:</h3>
+                            <ul class="content-list">
+                                <li><strong>Sistemas Operacionais (SO):</strong> Software essencial que gerencia os recursos do hardware e software, permitindo que outros programas sejam executados. Exemplos: Windows, macOS, Linux, Android, iOS.</li>
+                                <li><strong>Software Aplicativo:</strong> Programas projetados para realizar tarefas específicas para o usuário. Exemplos: navegadores de internet (Chrome, Firefox), processadores de texto (Word, Google Docs), editores de imagem (Photoshop), jogos e aplicativos de redes sociais.</li>
+                                <li><strong>Software de Programação:</strong> Ferramentas que auxiliam programadores a criar outros softwares. Exemplos: Compiladores, interpretadores e ambientes de desenvolvimento integrado (IDEs).</li>
+                            </ul>
+                            <p class="content-paragraph">
+                                A evolução tanto do hardware quanto do software caminha lado a lado, impulsionando inovações e novas funcionalidades em dispositivos cada vez mais potentes e versáteis.
+                            </p>
+                        `,
+                        quiz: [
+                            {
+                                question: "Qual a principal característica que diferencia hardware de software?",
+                                options: [
+                                    "Hardware é sempre mais caro que software.",
+                                    "Hardware é a parte física e tangível, enquanto software é a parte lógica e intangível (instruções e programas).",
+                                    "Software é fabricado antes do hardware.",
+                                    "Hardware só funciona em computadores de mesa, e software em celulares."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Um sistema operacional, como o Android ou Windows, se encaixa em qual categoria e qual sua função principal?",
+                                options: [
+                                    "É um hardware, responsável por armazenar dados permanentemente.",
+                                    "É um software aplicativo, utilizado para edição de imagens.",
+                                    "É um software de sistema (ou operacional), que gerencia os recursos do hardware e permite a execução de outros programas.",
+                                    "É um dispositivo de entrada para jogos."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "Qual dos seguintes componentes é um exemplo de hardware que atua como dispositivo de saída?",
+                                options: [
+                                    "Teclado.",
+                                    "Microfone.",
+                                    "Monitor.",
+                                    "Disco Rígido (HD)."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "Por que a memória RAM é considerada uma memória de curto prazo no contexto do hardware?",
+                                options: [
+                                    "Porque ela armazena dados apenas quando o computador está desligado.",
+                                    "Porque ela é utilizada para armazenar temporariamente dados e programas em execução para acesso rápido da CPU.",
+                                    "Porque seu tamanho é muito pequeno.",
+                                    "Porque só pode guardar informações por alguns segundos."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Um navegador de internet (ex: Chrome, Firefox) é um exemplo de qual tipo de software?",
+                                options: [
+                                    "Software de programação.",
+                                    "Sistema operacional.",
+                                    "Software aplicativo.",
+                                    "Hardware periférico."
+                                ],
+                                correct: 2
+                            }
+                        ]
+                    },
+                    'redes-sociais-7': {
+                        title: 'Redes Sociais: Usar com Consciência',
+                        description: 'Como interagir de forma segura e responsável nas redes sociais.',
+                        image: 'https://placehold.co/48x48/00FFFF/000000?text=RS7',
+                        text: `
+                            <h2 class="text-3xl font-bold section-title">3. Redes Sociais: Usar com Consciência (7º Ano)</h2>
+                            <p class="content-paragraph">
+                                As redes sociais tornaram-se um pilar central da comunicação e interação no século XXI. Plataformas como Instagram, TikTok, Facebook e X (antigo Twitter) conectam bilhões de pessoas globalmente, permitindo a partilha de ideias, experiências e informações em tempo real. Elas oferecem um espaço dinâmico para a expressão pessoal, o fortalecimento de laços sociais e o acesso a uma vasta gama de conteúdos. Contudo, a facilidade de interação e a velocidade da informação também apresentam desafios significativos que exigem um uso consciente e responsável.
+                            </p>
+                            <p class="content-paragraph">
+                                A conscientização sobre a privacidade, o impacto na saúde mental e a proliferação de informações falsas são aspetos cruciais a serem considerados. O que é partilhado online pode ter consequências duradouras, afetando a reputação digital e a segurança pessoal. Além disso, a comparação social e a busca por validação podem impactar o bem-estar psicológico. Desenvolver a capacidade de filtrar informações, verificar fontes e interagir de forma empática são habilidades essenciais para navegar com segurança e tirar o máximo proveito das redes sociais, transformando-as em ferramentas de empoderamento e conexão positiva.
+                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Diretrizes para um uso consciente e seguro das redes sociais:</h3>
+                            <ul class="content-list">
+                                <li><strong>Configurações de Privacidade Aprimoradas:</strong> Ajuste as configurações de privacidade para controlar quem pode ver suas publicações, fotos e informações pessoais. Opte por perfis privados e revise periodicamente essas configurações.</li>
+                                <li><strong>Conteúdo Consciente:</strong> Pense duas vezes antes de publicar. Uma vez que algo é compartilhado online, é extremamente difícil removê-lo completamente. Evite postagens que possam ser mal interpretadas, causar constrangimento futuro ou ofender outras pessoas.</li>
+                                <li><strong>Combate ao Cyberbullying:</strong> Nunca participe de comportamentos de assédio, intimidação ou difamação online. Seja um agente de mudança: se presenciar cyberbullying, denuncie à plataforma, bloqueie o agressor e converse com um adulto de confiança.</li>
+                                <li><strong>Verificação de Informações (Fact-Checking):</strong> Não acredite em tudo que vê online. Verifique a veracidade das informações, especialmente notícias e conteúdos sensacionalistas, consultando fontes confiáveis e oficiais antes de compartilhar.</li>
+                                <li><strong>Equilíbrio e Saúde Mental:</strong> Estabeleça limites de tempo para o uso das redes sociais. O uso excessivo pode levar a ansiedade, comparação social e baixa autoestima. Dedique tempo a atividades offline, como estudos, hobbies e interação com a família e amigos.</li>
+                                <li><strong>Interação com Estranhos:</strong> Seja extremamente cauteloso ao interagir com pessoas que você não conhece na vida real. Nunca forneça informações pessoais ou marque encontros sem a supervisão e permissão de um adulto.</li>
+                            </ul>
+                            <p class="content-paragraph">
+                                As redes sociais são ferramentas poderosas. Usá-las com sabedoria e ética garante uma experiência digital positiva e construtiva.
+                            </p>
+                        `,
+                        quiz: [
+                            {
+                                question: "Qual é a principal razão para ajustar as configurações de privacidade em perfis de redes sociais?",
+                                options: [
+                                    "Para aumentar o número de seguidores sem que eles vejam seu conteúdo.",
+                                    "Para garantir que apenas um público seleto e autorizado possa visualizar suas informações e publicações.",
+                                    "Para que suas publicações apareçam para mais pessoas desconhecidas.",
+                                    "Para dificultar o acesso a qualquer tipo de informação sobre você."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Por que é importante realizar 'fact-checking' (verificação de fatos) de informações vistas online antes de compartilhá-las?",
+                                options: [
+                                    "Porque todas as informações na internet são sempre verdadeiras.",
+                                    "Para não sobrecarregar a internet com muitos dados.",
+                                    "Para evitar a disseminação de informações falsas (fake news) e garantir a precisão do que é compartilhado.",
+                                    "Porque o conteúdo verdadeiro não precisa ser verificado."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "O que significa ter uma 'pegada digital' positiva e por que isso é relevante?",
+                                options: [
+                                    "Apenas a quantidade de aplicativos instalados no seu celular.",
+                                    "O rastro de informações e interações online que contribuem para sua reputação; é relevante para sua imagem pessoal e profissional futura.",
+                                    "A forma como você se esconde de pessoas na internet.",
+                                    "A capacidade de deixar comentários anônimos."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Qual a melhor forma de reagir ao presenciar um caso de cyberbullying em uma rede social?",
+                                options: [
+                                    "Juntar-se ao grupo que está praticando o bullying.",
+                                    "Ignorar a situação e esperar que ela se resolva sozinha.",
+                                    "Denunciar o comportamento à plataforma, bloquear o agressor e procurar um adulto de confiança para relatar o ocorrido.",
+                                    "Tentar argumentar diretamente com o agressor para convencê-lo a parar."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "O uso excessivo de redes sociais pode impactar a saúde mental de que maneira?",
+                                options: [
+                                    "Melhorando significativamente a autoestima.",
+                                    "Promovendo um maior isolamento social e sentimentos de ansiedade ou comparação social.",
+                                    "Aumentando a capacidade de concentração para estudos.",
+                                    "Eliminando completamente o estresse diário."
+                                ],
+                                correct: 1
+                            }
+                        ]
+                    }
+                }
+            },
+            '8ano': {
+                title: '8º Ano: Novas Fronteiras da Tecnologia',
+                topics: {
+                    'inteligencia-artificial-8': {
+                        title: 'Inteligência Artificial (IA)',
+                        description: 'Descubra o que é IA e como ela está transformando o mundo.',
+                        image: 'https://placehold.co/48x48/00FFFF/000000?text=IA8',
+                        text: `
+                            <h2 class="text-3xl font-bold section-title">1. Inteligência Artificial (IA) (8º Ano)</h2>
+                            <p class="content-paragraph">
+                                A <strong>Inteligência Artificial (IA)</strong> é um campo da ciência da computação dedicado a criar sistemas e máquinas capazes de simular a inteligência humana. Isso envolve a capacidade de aprender, raciocinar, resolver problemas, perceber, compreender a linguagem e até mesmo criar. A IA não é uma tecnologia do futuro distante; ela já está profundamente integrada em nosso cotidiano, otimizando processos e transformando setores inteiros da economia e da sociedade.
+                            </p>
+                            <p class="content-paragraph">
+                                Uma das subáreas mais importantes da IA é o <strong>Aprendizado de Máquina (Machine Learning)</strong>, onde os sistemas aprendem a partir de dados, identificando padrões e fazendo previsões ou decisões sem serem explicitamente programados para cada cenário. Outra subárea crucial é o <strong>Deep Learning (Aprendizado Profundo)</strong>, que utiliza redes neurais artificiais inspiradas no cérebro humano para processar grandes volumes de dados e reconhecer padrões complexos, como em reconhecimento de imagem e voz. A IA promete revolucionar ainda mais diversos campos, mas também levanta questões éticas importantes sobre vieses em algoritmos, privacidade de dados e o futuro do trabalho.
+                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Aplicações e considerações da Inteligência Artificial:</h3>
+                            <ul class="content-list">
+                                <li><strong>Assistentes Virtuais:</strong> Siri, Alexa, Google Assistant são exemplos de IA que utilizam processamento de linguagem natural para entender comandos de voz e responder a perguntas.</li>
+                                <li><strong>Sistemas de Recomendação:</strong> Plataformas como Netflix, Spotify e YouTube utilizam IA para analisar suas preferências e histórico, sugerindo conteúdos personalizados que aumentam o engajamento do usuário.</li>
+                                <li><strong>Saúde:</strong> IA é empregada no diagnóstico precoce de doenças (analisando imagens médicas), na descoberta de novos medicamentos e na otimização de planos de tratamento personalizados.</li>
+                                <li><strong>Veículos Autônomos:</strong> Carros autônomos utilizam IA para percepção do ambiente (sensores, câmeras), tomada de decisões em tempo real e navegação segura.</li>
+                                <li><strong>Detecção de Fraudes:</strong> Bancos e instituições financeiras usam IA para analisar transações e identificar padrões suspeitos que possam indicar atividades fraudulentas.</li>
+                                <li><strong>Questões Éticas:</strong> O uso de IA levanta debates sobre responsabilidade (quem é responsável por erros da IA?), vieses algorítmicos (se os dados de treinamento forem tendenciosos, a IA pode perpetuar preconceitos) e o impacto no mercado de trabalho (automação de tarefas).</li>
+                            </ul>
+                            <p class="content-paragraph">
+                                A IA é uma ferramenta poderosa que, se desenvolvida e utilizada de forma ética e responsável, tem o potencial de impulsionar a humanidade para novas fronteiras de inovação e bem-estar.
+                            </p>
+                        `,
+                        quiz: [
+                            {
+                                question: "Qual a principal diferença entre Aprendizado de Máquina (Machine Learning) e Deep Learning (Aprendizado Profundo)?",
+                                options: [
+                                    "Machine Learning só funciona com texto, Deep Learning só com imagens.",
+                                    "Machine Learning é uma subárea da IA onde sistemas aprendem a partir de dados, enquanto Deep Learning é uma subárea de Machine Learning que usa redes neurais para padrões complexos.",
+                                    "Deep Learning é mais antigo que Machine Learning.",
+                                    "Machine Learning exige que cada regra seja explicitamente programada, enquanto Deep Learning não."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Qual das seguintes aplicações de IA levanta mais preocupações éticas relacionadas a vieses e discriminação?",
+                                options: [
+                                    "Assistentes de voz para tarefas simples.",
+                                    "Sistemas de recomendação de filmes.",
+                                    "Algoritmos de reconhecimento facial ou de crédito baseados em dados tendenciosos.",
+                                    "Detecção de spam em e-mails."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "Como a IA é utilizada na área da saúde para beneficiar pacientes?",
+                                options: [
+                                    "Apenas na automação de agendamentos de consultas.",
+                                    "Auxiliando no diagnóstico precoce de doenças, na descoberta de medicamentos e na personalização de tratamentos.",
+                                    "Substituindo completamente o trabalho dos médicos.",
+                                    "Criando novos tipos de equipamentos de ginástica."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Qual o principal desafio que a disseminação de carros autônomos (usando IA) enfrenta atualmente?",
+                                options: [
+                                    "A falta de estradas pavimentadas em todo o mundo.",
+                                    "A necessidade de que o motorista ainda mantenha as mãos no volante.",
+                                    "Questões legais e éticas sobre responsabilidade em caso de acidentes, além de desafios técnicos de percepção em condições adversas.",
+                                    "O alto consumo de combustível."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "O que são os 'sistemas de recomendação' impulsionados por IA em plataformas de streaming?",
+                                options: [
+                                    "Ferramentas que bloqueiam o conteúdo que você não deve assistir.",
+                                    "Algoritmos que analisam seu histórico e preferências para sugerir conteúdos que possam te interessar.",
+                                    "Listas de filmes aleatórios que são atualizadas semanalmente.",
+                                    "Um tipo de assistente de voz que narra os filmes."
+                                ],
+                                correct: 1
+                            }
+                        ]
+                    },
+                    'cyberbullying-etica-8': {
+                        title: 'Cyberbullying e Ética Digital',
+                        description: 'Aprenda sobre o comportamento responsável e seguro na internet.',
+                        image: 'https://placehold.co/48x48/00FFFF/000000?text=E8',
+                        text: `
+                            <h2 class="text-3xl font-bold section-title">2. Cyberbullying e Ética Digital (8º Ano)</h2>
+                            <p class="content-paragraph">
+                                A digitalização crescente de nossas vidas tornou o espaço online um reflexo, e por vezes uma ampliação, de nossas interações sociais. Nesse contexto, a <strong>ética digital</strong> emerge como um conjunto de princípios e valores que guiam o comportamento responsável, respeitoso e seguro no ambiente virtual. Ela é crucial para garantir que a liberdade de expressão não se transforme em assédio, discriminação ou violência. Um dos desafios mais prementes da ética digital é o <strong>cyberbullying</strong>, que se manifesta através de agressões, intimidações ou humilhações praticadas por meios digitais, causando danos psicológicos e emocionais significativos às vítimas.
+                            </p>
+                            <p class="content-paragraph">
+                                A natureza do cyberbullying, muitas vezes anónima e viral, torna-o particularmente insidioso. As mensagens ofensivas podem se espalhar rapidamente, dificultando o controle e a remoção, e o agressor pode sentir uma falsa sensação de impunidade. O "efeito de espectador" (bystander effect), onde testemunhas se omitem, agrava o problema. Educar-se sobre as consequências do cyberbullying, tanto para a vítima quanto para o agressor, e conhecer as vias de denúncia são passos fundamentais para combater essa prática. Além disso, promover a empatia e o respeito online é essencial para construir uma cultura digital mais saudável e inclusiva, onde todos se sintam seguros e valorizados.
+                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Pilares da Ética Digital e Estratégias contra o Cyberbullying:</h3>
+                            <ul class="content-list">
+                                <li><strong>Cidadania Digital:</strong> Reconhecer seus direitos e responsabilidades no ambiente online, agindo de forma construtiva e respeitando os direitos dos outros usuários.</li>
+                                <li><strong>Empatia Online:</strong> Pensar no impacto de suas palavras e ações antes de postar. Uma mensagem ou imagem pode ser interpretada de diferentes formas e causar dor, mesmo que não seja essa a intenção.</li>
+                                <li><strong>Pegada Digital Consciente:</strong> Estar ciente de que tudo que é publicado online deixa um rastro permanente. Conteúdos inadequados podem prejudicar oportunidades futuras (acadêmicas, profissionais).</li>
+                                <li><strong>Denúncia e Bloqueio:</strong> Se for vítima ou testemunha de cyberbullying, denuncie imediatamente à plataforma (redes sociais, jogos, etc.) e bloqueie o agressor. Guarde evidências (prints de tela) e, o mais importante, converse com um adulto de confiança (pais, professores, orientadores).</li>
+                                <li><strong>Não Compartilhe Conteúdo Ofensivo:</strong> Evite repassar mensagens, memes, fotos ou vídeos que ridicularizem, humilhem ou discriminem outras pessoas. Ao fazer isso, você se torna parte do problema.</li>
+                                <li><strong>Privacidade e Segurança:</strong> Mantenha suas informações pessoais protegidas, não compartilhe senhas e utilize configurações de privacidade robustas em todas as suas contas.</li>
+                            </ul>
+                            <p class="content-paragraph">
+                                Construir um ambiente digital seguro e acolhedor é uma responsabilidade coletiva. A ética digital é a base para essa construção.
+                            </p>
+                        `,
+                        quiz: [
+                            {
+                                question: "O que é o 'efeito de espectador' (bystander effect) no contexto do cyberbullying e como ele agrava o problema?",
+                                options: [
+                                    "Quando a vítima consegue se defender sozinha.",
+                                    "Quando testemunhas de cyberbullying se omitem ou não intervêm, incentivando o agressor e fazendo a vítima se sentir ainda mais isolada.",
+                                    "Quando o agressor se sente mal pelo que fez.",
+                                    "Quando os pais assistem e não fazem nada."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Além de denunciar à plataforma, qual é a ação mais crucial para uma vítima ou testemunha de cyberbullying?",
+                                options: [
+                                    "Confrontar o agressor publicamente.",
+                                    "Ignorar e esperar que o problema desapareça.",
+                                    "Guardar evidências (prints de tela) e conversar imediatamente com um adulto de confiança (pais, professores).",
+                                    "Postar mensagens de vingança nas redes sociais."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "A 'pegada digital consciente' implica em qual comportamento ao usar a internet?",
+                                options: [
+                                    "Publicar tudo o que pensa sem filtros.",
+                                    "Estar ciente de que todo o conteúdo publicado online deixa um rastro permanente e pode impactar oportunidades futuras.",
+                                    "Compartilhar suas senhas com amigos para que eles ajudem a gerenciar sua conta.",
+                                    "Apenas usar a internet para jogos e entretenimento."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Por que a empatia online é um pilar fundamental da ética digital?",
+                                options: [
+                                    "Porque nos permite ser mais agressivos nas discussões.",
+                                    "Para garantir que todas as mensagens sejam curtas e diretas.",
+                                    "Porque nos faz considerar o impacto de nossas palavras e ações nos sentimentos dos outros, promovendo um ambiente respeitoso.",
+                                    "Para que todos compartilhem suas informações pessoais abertamente."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "Qual a melhor estratégia para combater a viralização de conteúdo ofensivo ou falso (fake news) em redes sociais?",
+                                options: [
+                                    "Compartilhá-lo rapidamente para que todos vejam.",
+                                    "Não compartilhá-lo e, se possível, denunciar ou desmentir com informações corretas de fontes confiáveis.",
+                                    "Adicionar um comentário engraçado ao conteúdo ofensivo.",
+                                    "Criar mais conteúdo ofensivo para competir com ele."
+                                ],
+                                correct: 1
+                            }
+                        ]
+                    },
+                    'iot-8': {
+                        title: 'Internet das Coisas (IoT)',
+                        description: 'Dispositivos conectados que facilitam o dia a dia e o futuro.',
+                        image: 'https://placehold.co/48x48/00FFFF/000000?text=I8',
+                        text: `
+                            <h2 class="text-3xl font-bold section-title">3. Internet das Coisas (IoT) (8º Ano)</h2>
+                            <p class="content-paragraph">
+                                A <strong>Internet das Coisas (IoT - Internet of Things)</strong> representa uma revolução tecnológica que conecta objetos do nosso cotidiano à internet, permitindo que eles coletem e troquem dados. Essa conexão vai além de computadores e smartphones, estendendo-se a uma vasta gama de dispositivos, desde eletrodomésticos e veículos até equipamentos industriais e sensores em cidades. O objetivo é criar um ecossistema inteligente onde os objetos possam "conversar" entre si e com os usuários, automatizando tarefas, otimizando processos e fornecendo informações valiosas em tempo real.
+                            </p>
+                            <p class="content-paragraph">
+                                A IoT funciona por meio de sensores embutidos nos objetos, que coletam dados sobre seu ambiente ou funcionamento. Esses dados são então transmitidos pela internet para sistemas de processamento, muitas vezes baseados em nuvem, onde são analisados e transformados em informações úteis. Com base nessas informações, ações podem ser tomadas automaticamente (como ajustar a temperatura de um ambiente) ou enviadas como alertas aos usuários. Embora a IoT prometa uma vida mais conveniente e eficiente, ela também levanta preocupações significativas em relação à privacidade dos dados, segurança cibernética e a complexidade de gerenciar tantos dispositivos conectados.
+                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Aplicações avançadas e desafios da IoT:</h3>
+                            <ul class="content-list">
+                                <li><strong>Cidades Inteligentes (Smart Cities):</strong> Utilização de sensores em infraestruturas urbanas para otimizar o tráfego, gerenciar resíduos (lixeiras inteligentes que avisam quando estão cheias), monitorar a qualidade do ar e melhorar a segurança pública.</li>
+                                <li><strong>Saúde Conectada (e-Health):</strong> Dispositivos vestíveis (wearables) e sensores médicos que monitoram continuamente os sinais vitais dos pacientes, enviando dados para médicos e familiares, o que é crucial para o acompanhamento de doenças crónicas e a telemedicina.</li>
+                                <li><strong>Indústria 4.0:</strong> Sensores em máquinas industriais coletam dados sobre desempenho e necessidades de manutenção, permitindo a manutenção preditiva (antes que o problema ocorra) e a otimização da produção.</li>
+                                <li><strong>Agricultura Inteligente (Smart Agriculture):</strong> Sensores de solo e drones monitoram as condições das lavouras (umidade, nutrientes), otimizando a irrigação e o uso de fertilizantes, aumentando a produtividade e a sustentabilidade.</li>
+                                <li><strong>Logística e Cadeia de Suprimentos:</strong> Sensores em veículos e embalagens monitoram a localização e as condições de transporte de mercadorias (temperatura, umidade), garantindo a integridade e a entrega eficiente.</li>
+                                <li><strong>Desafios:</strong> A grande quantidade de dados gerados pela IoT exige robustos sistemas de segurança para evitar vazamentos e ataques cibernéticos. A interoperabilidade entre dispositivos de diferentes fabricantes e a privacidade do usuário são também preocupações importantes.</li>
+                            </ul>
+                            <p class="content-paragraph">
+                                A Internet das Coisas está redesenhando nosso mundo, tornando-o mais responsivo e interconectado, mas exigindo atenção constante à segurança e à gestão ética dos dados.
+                            </p>
+                        `,
+                        quiz: [
+                            {
+                                question: "Qual a principal função dos sensores em dispositivos IoT?",
+                                options: [
+                                    "Apenas exibir o tempo.",
+                                    "Coletar dados sobre o ambiente ou o funcionamento do objeto e enviá-los para processamento.",
+                                    "Conectar o dispositivo diretamente à rede elétrica.",
+                                    "Reproduzir música em alta qualidade."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Como a IoT contribui para o conceito de 'Cidades Inteligentes'?",
+                                options: [
+                                    "Apenas automatizando semáforos.",
+                                    "Permitindo que os cidadãos controlem todos os serviços públicos de casa.",
+                                    "Através do uso de sensores para otimizar o tráfego, gerenciar resíduos e monitorar condições ambientais, melhorando a vida urbana.",
+                                    "Aumentando a quantidade de papelada nas prefeituras."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "Um dos maiores desafios da Internet das Coisas é:",
+                                options: [
+                                    "A falta de interesse das pessoas em dispositivos inteligentes.",
+                                    "A ausência de eletricidade em muitas regiões.",
+                                    "A segurança e a privacidade dos vastos volumes de dados coletados, além da interoperabilidade entre diferentes dispositivos.",
+                                    "O baixo custo de implementação dos sistemas."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "Qual o benefício da IoT na 'Indústria 4.0' com a manutenção preditiva?",
+                                options: [
+                                    "Apenas prever a demanda do mercado.",
+                                    "Realizar a manutenção de máquinas apenas após a falha, aumentando o tempo de inatividade.",
+                                    "Coletar dados para antecipar e prevenir falhas em equipamentos, otimizando a produção e reduzindo custos.",
+                                    "Tornar as fábricas menos eficientes."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "Dispositivos vestíveis (wearables) na 'Saúde Conectada' têm qual impacto principal?",
+                                options: [
+                                    "Apenas medem a temperatura ambiente.",
+                                    "Monitoram continuamente sinais vitais, auxiliando no acompanhamento de doenças e na telemedicina, sem necessidade de consultas presenciais.",
+                                    "Aumentam a burocracia em hospitais.",
+                                    "Causam mais problemas de saúde devido à radiação."
+                                ],
+                                correct: 1
+                            }
+                        ]
+                    }
+                }
+            },
+            '9ano': {
+                title: '9º Ano: Transformações e Desafios Tecnológicos',
+                topics: {
+                    'seguranca-cibernetica-9': {
+                        title: 'Segurança Cibernética',
+                        description: 'Como proteger dados e sistemas contra ataques digitais.',
+                        image: 'https://placehold.co/48x48/00FFFF/000000?text=SC9',
+                        text: `
+                            <h2 class="text-3xl font-bold section-title">1. Segurança Cibernética (9º Ano)</h2>
+                            <p class="content-paragraph">
+                                No mundo interconectado de hoje, onde a vida pessoal e profissional está cada vez mais digitalizada, a <strong>Segurança Cibernética</strong> tornou-se uma disciplina essencial. Ela engloba o conjunto de tecnologias, processos e controles projetados para proteger redes, programas, dados e sistemas de ataques digitais, roubo, danos ou acessos não autorizados. A crescente sofisticação das ameaças cibernéticas, que variam de ataques de hackers a crimes financeiros e espionagem industrial, exige uma compreensão aprofundada dos riscos e a implementação de defesas robustas.
+                            </p>
+                            <p class="content-paragraph">
+                                A segurança cibernética não é apenas uma preocupação para grandes empresas ou governos; é uma responsabilidade individual e coletiva. Cada usuário online é um potencial alvo de ataques, e a fragilidade de um elo na corrente (como uma senha fraca ou um clique em um link malicioso) pode comprometer toda uma rede. Por isso, a educação digital e a adoção de práticas de segurança rigorosas são tão importantes quanto o desenvolvimento de tecnologias de defesa avançadas. O desafio constante é antecipar e mitigar ameaças em um cenário digital que evolui rapidamente.
+                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Ameaças e Mecanismos de Defesa na Segurança Cibernética:</h3>
+                            <ul class="content-list">
+                                <li><strong>Malware (Software Malicioso):</strong> Inclui vírus (se espalham e corrompem arquivos), ransomware (criptografa dados e exige resgate), spyware (coleta informações secretamente) e worms (se replicam e saturam redes). A proteção eficaz requer antivírus atualizados e firewall.</li>
+                                <li><strong>Phishing e Engenharia Social:</strong> Phishing são tentativas de obter informações confidenciais (senhas, dados bancários) disfarçando-se de entidades confiáveis (bancos, empresas). Engenharia social é a manipulação psicológica para levar a vítima a cometer erros de segurança ou divulgar informações. Desconfiança e verificação de fontes são cruciais.</li>
+                                <li><strong>Ataques de Negação de Serviço (DDoS):</strong> Tentativas de sobrecarregar um servidor, serviço ou rede com um volume massivo de tráfego de internet, tornando-o inacessível para usuários legítimos.</li>
+                                <li><strong>Senhas Fortes e Autenticação Multifator (MFA/2FA):</strong> Criar senhas longas, complexas (combinando letras, números e símbolos) e únicas para cada serviço é a primeira linha de defesa. A Autenticação de Dois Fatores (2FA) ou Multifator (MFA) adiciona uma camada extra de segurança, exigindo uma segunda forma de verificação (ex: código enviado ao celular).</li>
+                                <li><strong>Criptografia:</strong> Processo de codificar informações para protegê-las de acesso não autorizado. Dados sensíveis (senhas, transações bancárias) devem ser sempre criptografados.</li>
+                                <li><strong>Backups Regulares:</strong> Manter cópias de segurança de seus dados importantes em locais seguros (nuvem, HD externo) é essencial para recuperação em caso de ataque cibernético ou falha de hardware.</li>
+                                <li><strong>Atualizações de Software:</strong> Manter sistemas operacionais, navegadores e aplicativos atualizados é vital, pois as atualizações frequentemente incluem patches de segurança que corrigem vulnerabilidades.</li>
+                            </ul>
+                            <p class="content-paragraph">
+                                A segurança cibernética é um campo dinâmico que exige vigilância contínua e aprimoramento de estratégias para proteger o ecossistema digital.
+                            </p>
+                        `,
+                        quiz: [
+                            {
+                                question: "Qual a diferença crucial entre um ataque de 'phishing' e um 'ataque de negação de serviço (DDoS)'?",
+                                options: [
+                                    "Phishing visa roubar dinheiro, DDoS visa roubar dados.",
+                                    "Phishing manipula usuários para obter informações confidenciais, enquanto DDoS sobrecarrega sistemas para torná-los inacessíveis.",
+                                    "DDoS afeta apenas empresas, phishing afeta apenas indivíduos.",
+                                    "Phishing usa vírus, DDoS usa senhas fracas."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Por que a 'Autenticação de Dois Fatores (2FA)' é considerada uma camada de segurança superior a apenas uma senha forte?",
+                                options: [
+                                    "Porque a 2FA é mais fácil de lembrar.",
+                                    "Porque a 2FA exige apenas uma senha mais curta.",
+                                    "Porque adiciona uma segunda forma de verificação (ex: código no celular), dificultando o acesso mesmo que a senha seja comprometida.",
+                                    "Porque substitui a necessidade de ter uma senha."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "O que é 'ransomware' e qual a principal medida de proteção contra ele?",
+                                options: [
+                                    "Um tipo de software para editar fotos.",
+                                    "Um software malicioso que criptografa dados e exige pagamento para liberá-los; a principal proteção é ter backups regulares de seus arquivos.",
+                                    "Um tipo de rede social para compartilhamento de vídeos.",
+                                    "Um programa que acelera a velocidade da internet."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Qual a importância de manter softwares e sistemas operacionais sempre atualizados para a segurança cibernética?",
+                                options: [
+                                    "Apenas para ter novas funcionalidades.",
+                                    "Para garantir que o software funcione mais devagar.",
+                                    "Porque as atualizações frequentemente incluem 'patches' de segurança que corrigem vulnerabilidades exploradas por ataques.",
+                                    "Para aumentar o consumo de energia do computador."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "A 'engenharia social' se baseia principalmente em qual aspeto para ter sucesso nos ataques?",
+                                options: [
+                                    "Habilidades avançadas de programação e hacking.",
+                                    "A manipulação psicológica de indivíduos para que revelem informações ou executem ações que comprometam a segurança.",
+                                    "A instalação de softwares complexos no computador da vítima.",
+                                    "O uso de equipamentos de rede de alta tecnologia."
+                                ],
+                                correct: 1
+                            }
+                        ]
+                    },
+                    'impacto-sociedade-9': {
+                        title: 'Impacto da Tecnologia na Sociedade',
+                        description: 'Como a tecnologia molda a forma como vivemos e trabalhamos.',
+                        image: 'https://placehold.co/48x48/00FFFF/000000?text=IS9',
+                        text: `
+                            <h2 class="text-3xl font-bold section-title">2. Impacto da Tecnologia na Sociedade (9º Ano)</h2>
+                            <p class="content-paragraph">
+                                A tecnologia é um catalisador de mudanças sem precedentes, remodelando a sociedade em suas fundações económicas, sociais e culturais. A Revolução Digital, em particular, acelerou a globalização, transformou a comunicação e redefiniu o mercado de trabalho. Se, por um lado, ela oferece oportunidades de progresso e democratização do acesso à informação, por outro, levanta desafios complexos relacionados à privacidade, desigualdade e dilemas éticos.
+                            </p>
+                            <p class="content-paragraph">
+                                A análise do impacto tecnológico exige uma visão crítica e equilibrada. É preciso reconhecer o potencial transformador das inovações para resolver problemas globais, como na saúde e na educação, ao mesmo tempo em que se abordam as ramificações negativas, como o impacto na saúde mental devido ao uso excessivo ou a propagação rápida de desinformação. O debate sobre como regular e direcionar o desenvolvimento tecnológico de forma a maximizar seus benefícios e minimizar seus riscos é fundamental para moldar um futuro digital mais equitativo e sustentável.
+                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Transformações e desafios causados pela tecnologia:</h3>
+                            <ul class="content-list">
+                                <li><strong>Conectividade e Comunicação:</strong> A internet e as redes sociais permitiram a comunicação instantânea e global, facilitando a colaboração, o acesso à informação e a formação de comunidades, mas também gerando sobrecarga de informação e desafios de privacidade.</li>
+                                <li><strong>Saúde e Bem-Estar:</strong> Avanços em biotecnologia, telemedicina e dispositivos médicos digitais revolucionaram o diagnóstico, tratamento e monitoramento da saúde, prolongando a expectativa de vida e melhorando a qualidade de vida.</li>
+                                <li><strong>Educação e Aprendizado:</strong> Plataformas de ensino à distância, recursos educacionais digitais e ferramentas interativas democratizaram o acesso ao conhecimento, mas também exigem infraestrutura e inclusão digital para todos.</li>
+                                <li><strong>Mercado de Trabalho e Automação:</strong> A automação e a inteligência artificial estão transformando profissões, eliminando algumas tarefas repetitivas, mas também criando novas demandas por habilidades digitais e exigindo requalificação profissional. Isso gera debates sobre desemprego tecnológico e a necessidade de novas políticas sociais.</li>
+                                <li><strong>Economia e Novas Indústrias:</strong> O surgimento de empresas de tecnologia, o comércio eletrônico e a economia de plataformas (apps de transporte, entrega) criaram modelos de negócio inovadores e geraram riqueza, mas também levantaram questões sobre regulamentação, direitos trabalhistas e concentração de poder.</li>
+                                <li><strong>Privacidade e Ética:</strong> A coleta massiva de dados pessoais e o desenvolvimento de IA levantam preocupações éticas sobre vigilância, manipulação de informações, vieses algorítmicos e o consentimento do usuário.</li>
+                                <li><strong>Desinformação (Fake News):</strong> A velocidade com que a informação se espalha online facilita a proliferação de notícias falsas e propaganda, impactando a opinião pública, a política e a saúde.</li>
+                            </ul>
+                            <p class="content-paragraph">
+                                A tecnologia é uma faca de dois gumes; seu impacto é moldado pela forma como a desenvolvemos, regulamos e a utilizamos como sociedade.
+                            </p>
+                        `,
+                        quiz: [
+                            {
+                                question: "Qual dos seguintes não é um desafio ético ou social diretamente associado ao avanço da tecnologia?",
+                                options: [
+                                    "Aumento da desigualdade digital.",
+                                    "Preocupações com a privacidade e o uso de dados pessoais.",
+                                    "A disseminação rápida de desinformação (fake news).",
+                                    "A invenção do lápis e do papel."
+                                ],
+                                correct: 3
+                            },
+                            {
+                                question: "Como a automação e a inteligência artificial estão impactando o mercado de trabalho?",
+                                options: [
+                                    "Apenas criando novos empregos em grande escala.",
+                                    "Eliminando certas tarefas repetitivas, criando novas demandas por habilidades digitais e exigindo requalificação profissional, gerando debates sobre desemprego tecnológico.",
+                                    "Reduzindo a necessidade de qualquer tipo de qualificação.",
+                                    "Aumentando a carga horária de todos os trabalhadores."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Qual o principal benefício da tecnologia na área da saúde?",
+                                options: [
+                                    "Apenas a criação de novos hospitais.",
+                                    "Avanços no diagnóstico, tratamento e monitoramento de doenças, prolongando a expectativa e qualidade de vida.",
+                                    "A redução do custo de todos os medicamentos.",
+                                    "O aumento das filas de espera para atendimento médico."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "A 'economia de plataformas' (ex: aplicativos de transporte, entrega) trouxe inovações, mas também levantou questões sobre:",
+                                options: [
+                                    "A falta de opções para os consumidores.",
+                                    "Regulamentação, direitos trabalhistas e concentração de poder por grandes empresas.",
+                                    "A diminuição da poluição do ar.",
+                                    "A obrigatoriedade de ter um smartphone."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Apesar dos avanços, a tecnologia pode agravar qual tipo de desigualdade na sociedade?",
+                                options: [
+                                    "Desigualdade de altura.",
+                                    "Desigualdade digital, referente ao acesso desigual à internet e a dispositivos.",
+                                    "Desigualdade alimentar.",
+                                    "Desigualdade de idioma."
+                                ],
+                                correct: 1
+                            }
+                        ]
+                    },
+                    'rv-ra-9': {
+                        title: 'Realidade Virtual (RV) e Aumentada (RA)',
+                        description: 'A diferença e aplicações destas tecnologias imersivas.',
+                        image: 'https://placehold.co/48x48/00FFFF/000000?text=VR9',
+                        text: `
+                            <h2 class="text-3xl font-bold section-title">3. Realidade Virtual (RV) e Aumentada (RA) (9º Ano)</h2>
+                            <p class="content-paragraph">
+                                As tecnologias de <strong>Realidade Virtual (RV)</strong> e <strong>Realidade Aumentada (RA)</strong> representam avanços significativos na forma como interagimos com o mundo digital, criando experiências imersivas e interativas que borram as linhas entre o físico e o virtual. Embora frequentemente confundidas, elas operam sob princípios distintos e têm aplicações complementares em diversos setores, desde o entretenimento e a educação até a medicina e a engenharia.
+                            </p>
+                            <p class="content-paragraph">
+                                A RV transporta o usuário para um ambiente completamente simulado, isolando-o do mundo físico para criar uma imersão total. Isso é conseguido através de headsets que bloqueiam a visão do exterior e exibem gráficos 3D envolventes. Por outro lado, a RA sobrepõe elementos digitais (informações, gráficos 3D) ao ambiente do mundo real em tempo real. O usuário ainda consegue ver o seu redor, mas com informações adicionais que enriquecem a sua percepção. A distinção fundamental reside no facto de a RV substituir a realidade, enquanto a RA a aprimora.
+                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Princípios e Aplicações da RV e RA:</h3>
+                            <ul class="content-list">
+                                <li><strong>Realidade Virtual (RV):</strong>
+                                    <ul>
+                                        <li><strong>Princípio:</strong> Cria um ambiente totalmente artificial e imersivo, onde o usuário se sente presente em um mundo simulado.</li>
+                                        <li><strong>Equipamento:</strong> Exige headsets de RV (ex: Oculus Rift, HTC Vive, PlayStation VR) que cobrem os olhos e muitas vezes fones de ouvido para o áudio imersivo.</li>
+                                        <li><strong>Aplicações:</strong>
+                                            <ul>
+                                                <li><strong>Jogos e Entretenimento:</strong> Experiências de jogo altamente imersivas, simulações de montanha-russa, filmes 360°.</li>
+                                                <li><strong>Treinamento e Simulações:</strong> Treinamento de pilotos, cirurgiões, militares, engenheiros, permitindo a prática de habilidades em ambientes controlados e seguros.</li>
+                                                <li><strong>Turismo Virtual:</strong> Explorar locais históricos ou exóticos sem sair de casa.</li>
+                                                <li><strong>Terapia:</strong> Tratamento de fobias e transtorno de estresse pós-traumático através da exposição controlada a ambientes virtuais.</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li><strong>Realidade Aumentada (RA):</strong>
+                                    <ul>
+                                        <li><strong>Princípio:</strong> Adiciona elementos virtuais (imagens, vídeos, dados) ao mundo real, enriquecendo a percepção do usuário. A realidade física permanece visível.</li>
+                                        <li><strong>Equipamento:</strong> Pode ser acessada via smartphones, tablets (através da câmera) ou óculos de RA específicos (ex: Google Glass, Microsoft HoloLens).</li>
+                                        <li><strong>Aplicações:</strong>
+                                            <ul>
+                                                <li><strong>Jogos:</strong> Pokémon GO, que projeta criaturas virtuais no mundo real através da câmera do celular.</li>
+                                                <li><strong>Design de Interiores:</strong> Aplicativos que permitem visualizar como móveis e decorações ficariam em um ambiente antes da compra.</li>
+                                                <li><strong>Manutenção e Reparo:</strong> Técnicos podem usar óculos de RA para ver instruções e diagramas sobrepostos em equipamentos reais durante o reparo.</li>
+                                                <li><strong>Educação:</strong> Exibir modelos 3D de sistemas complexos (corpo humano, mecanismos) em um ambiente real da sala de aula.</li>
+                                                <li><strong>Filtros de Redes Sociais:</strong> Como os filtros de Instagram e Snapchat que adicionam elementos ao rosto ou ao ambiente em tempo real.</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <p class="content-paragraph">
+                                Ambas as realidades continuam a evoluir, prometendo integrar ainda mais o mundo digital e físico, oferecendo novas possibilidades de interação, aprendizado e experiência.
+                            </p>
+                        `,
+                        quiz: [
+                            {
+                                question: "Qual a diferença fundamental entre Realidade Virtual (RV) e Realidade Aumentada (RA)?",
+                                options: [
+                                    "RV usa apenas jogos, RA usa apenas aplicativos de design.",
+                                    "RV transporta o usuário para um ambiente totalmente simulado, enquanto RA sobrepõe elementos digitais ao mundo real.",
+                                    "RA exige óculos especiais, RV usa apenas smartphones.",
+                                    "RV é uma tecnologia mais antiga que RA."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Um aplicativo de smartphone que permite que você veja como um novo sofá ficaria em sua sala de estar antes de comprá-lo é um exemplo de qual tecnologia?",
+                                options: [
+                                    "Realidade Virtual (RV).",
+                                    "Inteligência Artificial (IA).",
+                                    "Realidade Aumentada (RA).",
+                                    "Internet das Coisas (IoT)."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "Para qual finalidade a Realidade Virtual (RV) é frequentemente utilizada em ambientes de treinamento profissional (ex: pilotos, cirurgiões)?",
+                                options: [
+                                    "Para entretenimento durante o treinamento.",
+                                    "Para permitir a prática de habilidades em ambientes controlados e seguros, sem riscos reais.",
+                                    "Para substituir completamente a necessidade de instrutores.",
+                                    "Para simular situações impossíveis na vida real."
+                                ],
+                                correct: 1
+                            },
+                            {
+                                question: "Qual dos seguintes dispositivos é mais comumente associado à experiência de Realidade Virtual imersiva?",
+                                options: [
+                                    "Um smartphone sem acessórios.",
+                                    "Óculos de Realidade Aumentada como Google Glass.",
+                                    "Um headset de RV (ex: Oculus Rift, HTC Vive).",
+                                    "Uma televisão 3D."
+                                ],
+                                correct: 2
+                            },
+                            {
+                                question: "Um jogo como Pokémon GO, que projeta criaturas virtuais no mundo real através da câmera do celular, é um exemplo clássico de:",
+                                options: [
+                                    "Realidade Virtual (RV).",
+                                    "Inteligência Artificial (IA).",
+                                    "Internet das Coisas (IoT).",
+                                    "Realidade Aumentada (RA)."
+                                ],
+                                correct: 3
+                            }
+                        ]
+                    }
+                }
+            },
+            'curiosidades-gerais': {
+                title: 'Curiosidades da História da Tecnologia',
+                topics: {
+                    'curiosidades': {
+                        title: 'Curiosidades da História da Tecnologia',
+                        description: 'Fatos surpreendentes sobre as invenções que mudaram o mundo.',
+                        image: 'https://placehold.co/48x48/ec4899/ffffff?text=Fun',
+                        text: `
+                            <h2 class="text-3xl font-bold section-title">6. Curiosidades da História da Tecnologia</h2>
+                            <p class="content-paragraph">
+                                A história da tecnologia é cheia de fatos interessantes e surpreendentes. Conhecer o passado nos ajuda a entender como chegamos ao presente e o que esperar do futuro!
+                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-700">Algumas Curiosidades:</h3>
+                            <ul class="content-list">
+                                <li><strong>O Primeiro Computador (Realmente Grande!):</strong> O ENIAC, construído em 1946, foi um dos primeiros computadores eletrônicos de grande escala. Ele pesava cerca de 27 toneladas (o peso de 5 elefantes!) e ocupava uma sala inteira. Hoje, seu celular é milhões de vezes mais poderoso!</li>
+                                <li><strong>O Primeiro Telefone (1876):</strong> Alexander Graham Bell é creditado com a invenção do telefone. A primeira frase que ele disse ao telefone foi para seu assistente: "Sr. Watson, venha aqui, preciso de você."</li>
+                                <li><strong>O Primeiro Jogo de Videogame (1958):</strong> Antes de Pac-Man ou Mario, existia o "Tennis for Two", criado por William Higinbotham. Ele usava um osciloscópio (uma tela parecida com um radar) para simular uma partida de tenis.</li>
+                                <li><strong>A World Wide Web (1989):</strong> Tim Berners-Lee é considerado o inventor da World Wide Web, o sistema que você usa para navegar na internet. Ele criou o primeiro navegador e editor de páginas da web, tornando a informação acessível a todos.</li>
+                                <li><strong>A Origem do "Bug" no Computador:</strong> Em 1947, cientistas encontraram uma mariposa (um "bug" em inglês) dentro de um relé de um computador que estava causando problemas. Eles a removeram e documentaram o "primeiro caso real de bug encontrado". Daí surgiu o termo "bug" para falhas em programas.</li>
+                            </ul>
+                            <p class="content-paragraph">
+                                Essas são apenas algumas das muitas histórias incríveis por trás das tecnologias que usamos hoje. Elas nos mostram que a inovação muitas vezes começa com uma ideia simples e muita dedicação!
+                            </p>
+                        `,
+                        quiz: null
+                    }
+                }
+            },
+            'creditos-gerais': {
+                title: 'Créditos',
+                topics: {
+                    'creditos': {
+                        title: 'Créditos',
+                        description: 'Informações sobre a criação e autoria deste projeto.',
+                        image: 'https://placehold.co/48x48/9ca3af/ffffff?text=Info',
+                        text: `
+                            <h2 class="text-3xl font-bold section-title">7. Créditos</h2>
+                            <p class="content-paragraph">
+                                Este aplicativo TecnoQuiz foi criado para auxiliar no aprendizado de educação tecnológica dos alunos do 6º ao 9º ano do Ensino Fundamental II.
+                            </p>
+                            <p class="content-paragraph">
+                                <strong>Conteúdo e Curadoria:</strong> Professor Jonathan Silva
+                            </p>
+                            <p class="content-paragraph">
+                                Agradecemos a todos que contribuíram para tornar este material educativo acessível e divertido!
+                            </p>
+                        `,
+                        quiz: null
+                    }
+                }
+            }
+        };
+
+        let currentQuizQuestions = null;
+        let inQuizMode = false;
+        let selectedYear = null;
+
+        const mainHeader = document.getElementById('main-header');
+        const yearSelectionScreen = document.getElementById('year-selection-screen');
+        const yearButtonsList = document.getElementById('year-buttons-list');
+        const topicScreen = document.getElementById('topic-screen');
+        const topicScreenTitle = document.getElementById('topic-screen-title');
+        const topicButtonsList = document.getElementById('topic-buttons-list');
+        const contentDisplay = document.getElementById('content-display');
+        const quizDisplay = document.getElementById('quiz-display');
+        const quizQuestionsDiv = document.getElementById('quiz-questions');
+        const quizResultsDiv = document.getElementById('quiz-results');
+        const topicTextSection = document.getElementById('topic-text-section');
+        const quizButtonContainer = document.getElementById('quiz-button-container');
+        const currentUserInfo = document.getElementById('current-user-info');
+
+        function showYearSelection() {
+            inQuizMode = false;
+            selectedYear = null;
+            currentUserInfo && currentUserInfo.classList.add('hidden');
+
+            yearSelectionScreen && yearSelectionScreen.classList.remove('hidden-container');
+            topicScreen && topicScreen.classList.add('hidden-container');
+            contentDisplay && contentDisplay.classList.add('hidden-container');
+            quizDisplay && quizDisplay.classList.add('hidden-container');
+
+            renderYearButtons();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderYearButtons() {
+            if (!yearButtonsList) return;
+            yearButtonsList.innerHTML = '';
+            for (let year = 6; year <= 9; year++) {
+                const yearKey = `${year}ano`;
+                const topicCardHtml = `
+                    <div class="topic-card-wrapper">
+                        <button onclick="showTopicsForYear('${yearKey}')" class="topic-main-button">
+                            <img src="https://placehold.co/48x48/00FFFF/000000?text=${year}" alt="Ícone ${year}º Ano" class="selection-button-icon">
+                            <span>${year}º Ano</span>
+                        </button>
+                    </div>
+                `;
+                yearButtonsList.innerHTML += topicCardHtml;
+            }
+            const generalTopics = ['curiosidades-gerais', 'creditos-gerais'];
+            generalTopics.forEach(topicId => {
+                const topicData = contentData[topicId];
+                if (topicData) {
+                    const topicCardHtml = `
+                        <div class="topic-card-wrapper">
+                            <button onclick="showContent('${topicId}', '${Object.keys(topicData.topics)[0]}')" class="topic-main-button">
+                                <img src="${topicData.topics[Object.keys(topicData.topics)[0]].image}" alt="Ícone ${topicData.title}" class="selection-button-icon" onerror="this.onerror=null; this.src='https://placehold.co/48x48/00FFFF/000000?text=${topicData.title.substring(0,2).toUpperCase()}';">
+                                <span>${topicData.title}</span>
+                            </button>
+                        </div>
+                    `;
+                    yearButtonsList.innerHTML += topicCardHtml;
+                }
+            });
+        }
+
+        function showTopicsForYear(yearKey) {
+            selectedYear = yearKey;
+            currentUserInfo && (currentUserInfo.textContent = `Ano: ${selectedYear.replace('ano', 'º Ano')}`);
+            currentUserInfo && currentUserInfo.classList.remove('hidden');
+
+            yearSelectionScreen && yearSelectionScreen.classList.add('hidden-container');
+            topicScreen && topicScreen.classList.remove('hidden-container');
+            contentDisplay && contentDisplay.classList.add('hidden-container');
+            quizDisplay && quizDisplay.classList.add('hidden-container');
+
+            topicScreenTitle && (topicScreenTitle.textContent = contentData[yearKey].title);
+
+            renderTopicButtonsForYearScreen(yearKey);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderTopicButtonsForYearScreen(yearKey) {
+            if (!topicButtonsList) return;
+            topicButtonsList.innerHTML = '';
+            const topics = contentData[yearKey].topics;
+            if (!topics) return;
+
+            for (const topicId in topics) {
+                const topic = topics[topicId];
+                let topicCardHtml = `
+                    <div class="topic-card-wrapper">
+                        <button onclick="showContent('${yearKey}', '${topicId}')" class="topic-main-button">
+                            <img src="${topic.image}" alt="Ícone de ${topic.title}" class="selection-button-icon" onerror="this.onerror=null; this.src='https://placehold.co/48x48/00FFFF/000000?text=${topic.title.substring(0,2).toUpperCase()}';">
+                            <span>${topic.title}</span>
+                            ${(topic.quiz && Array.isArray(topic.quiz) && topic.quiz.length > 0) ? '<span class="quiz-indicator-text">(Com Quiz)</span>' : ''}
+                        </button>
+                `;
+
+                if (topic.quiz && Array.isArray(topic.quiz) && topic.quiz.length > 0) {
+                    topicCardHtml += `
+                        <button onclick="startQuiz('${yearKey}', '${topicId}')" class="btn-quiz-card">
+                            Iniciar Quiz
+                        </button>
+                    `;
+                }
+                topicCardHtml += `</div>`;
+                topicButtonsList.innerHTML += topicCardHtml;
+            }
+        }
+
+        function showContent(yearKey, topicId) {
+            if (inQuizMode) return;
+
+            const data = contentData[yearKey]?.topics?.[topicId];
+            if (!data || !data.text) return;
+
+            mainHeader && mainHeader.classList.remove('hidden-container');
+            yearSelectionScreen && yearSelectionScreen.classList.add('hidden-container');
+            topicScreen && topicScreen.classList.add('hidden-container');
+            contentDisplay && contentDisplay.classList.remove('hidden-container');
+            quizDisplay && quizDisplay.classList.add('hidden-container');
+
+            topicTextSection && (topicTextSection.innerHTML = data.text);
+
+            if (quizButtonContainer) {
+                quizButtonContainer.innerHTML = '';
+            }
+
+            contentDisplay && contentDisplay.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function startQuiz(yearKey, topicId) {
+            const data = contentData[yearKey]?.topics?.[topicId];
+            if (!data || !data.quiz) {
+                selectedYear ? showTopicsForYear(selectedYear) : showYearSelection();
+                return;
+            }
+
+            inQuizMode = true;
+            mainHeader && mainHeader.classList.add('hidden-container');
+            yearSelectionScreen && yearSelectionScreen.classList.add('hidden-container');
+            topicScreen && topicScreen.classList.add('hidden-container');
+            contentDisplay && contentDisplay.classList.add('hidden-container');
+            quizDisplay && quizDisplay.classList.remove('hidden-container');
+
+            currentQuizQuestions = data.quiz;
+            renderQuizQuestions();
+            quizDisplay && quizDisplay.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function renderQuizQuestions() {
+            if (!quizQuestionsDiv) return;
+            quizQuestionsDiv.innerHTML = '';
+
+            quizResultsDiv && quizResultsDiv.classList.add('hidden-container');
+
+            currentQuizQuestions.forEach((q, qIndex) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'mb-6 text-left';
+                questionDiv.innerHTML = `<p class="font-semibold text-lg mb-3">${qIndex + 1}. ${q.question}</p>`;
+
+                q.options.forEach((option, oIndex) => {
+                    const optionLabel = document.createElement('label');
+                    optionLabel.className = 'quiz-option';
+                    optionLabel.innerHTML = `
+                        <input type="radio" name="question-${qIndex}" value="${oIndex}" class="form-radio text-blue-600 mr-2">
+                        <span>${option}</span>
+                    `;
+                    questionDiv.appendChild(optionLabel);
+                });
+                quizQuestionsDiv.appendChild(questionDiv);
+            });
+        }
+
+        function submitQuiz() {
+            let correctAnswers = 0;
+            let allAnswered = true;
+
+            currentQuizQuestions.forEach((q, qIndex) => {
+                const selectedOption = document.querySelector(`input[name="question-${qIndex}"]:checked`);
+                const optionsElements = document.querySelectorAll(`input[name="question-${qIndex}"]`);
+
+                if (!selectedOption) {
+                    allAnswered = false;
+                }
+
+                optionsElements.forEach((optionInput, oIndex) => {
+                    const parentLabel = optionInput.closest('.quiz-option');
+                    parentLabel.classList.remove('correct', 'incorrect');
+                    if (oIndex === q.correct) {
+                        parentLabel.classList.add('correct');
+                    }
+                });
+
+                if (selectedOption) {
+                    const userAnswer = parseInt(selectedOption.value);
+                    if (userAnswer === q.correct) {
+                        correctAnswers++;
+                    } else {
+                         selectedOption.closest('.quiz-option').classList.add('incorrect');
+                    }
+                }
+            });
+
+            if (!quizResultsDiv) return;
+
+            quizResultsDiv.classList.remove('hidden-container');
+            if (!allAnswered) {
+                quizResultsDiv.textContent = "Por favor, responda a todas as perguntas antes de enviar.";
+                quizResultsDiv.classList.remove('success', 'error');
+                return;
+            }
+
+            const totalQuestions = currentQuizQuestions.length;
+            const score = (correctAnswers / totalQuestions) * 100;
+
+            quizResultsDiv.innerHTML = `Você acertou ${correctAnswers} de ${totalQuestions} perguntas (${score.toFixed(0)}%).`;
+
+            if (score >= 70) {
+                quizResultsDiv.classList.remove('error');
+                quizResultsDiv.classList.add('success');
+            } else {
+                quizResultsDiv.classList.remove('success');
+                quizResultsDiv.classList.add('error');
+            }
+        }
+
+        function goBackToTopics() {
+            selectedYear ? showTopicsForYear(selectedYear) : showYearSelection();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showYearSelection();
+        });
+    </script>
+</body>
+</html>
